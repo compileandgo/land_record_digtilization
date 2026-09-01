@@ -4,17 +4,13 @@ from google import genai
 from google.genai.types import HttpOptions, Part, GenerateContentConfig
 from google.oauth2 import service_account
 import json
-from dotenv import load_dotenv
+from app.lib.auth import get_credentials
 from app.lib.prompt import create_prompt
 from app.lib.schema import get_response_schema
 
 load_dotenv()
 
-credentials_info = json.loads(os.getenv("GOOGLE_CREDENTIALS_JSON"))
-
-credentials = service_account.Credentials.from_service_account_info(
-    credentials_info
-)
+credentials = get_credentials()
 
 client = genai.Client(
     vertexai=True,

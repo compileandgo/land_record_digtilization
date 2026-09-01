@@ -4,18 +4,14 @@ import os
 from google.api_core.client_options import ClientOptions
 from google.cloud import documentai_v1
 from google.oauth2 import service_account
-from dotenv import load_dotenv
+from app.lib.auth import get_credentials
 load_dotenv()
 
 project_id = "land-record-507214"
 processor_id = "5d275134eb6f9c0a"
 location = "asia-south1"
 
-credentials_info = json.loads(os.getenv("GOOGLE_CREDENTIALS_JSON"))
-
-credentials = service_account.Credentials.from_service_account_info(
-    credentials_info
-)
+credentials = get_credentials()
 
 opts = ClientOptions(
     api_endpoint=f"{location}-documentai.googleapis.com"
