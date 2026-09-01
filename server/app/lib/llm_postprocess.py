@@ -1,15 +1,27 @@
+import os
+
 from google import genai
 from google.genai.types import HttpOptions, Part, GenerateContentConfig
+from google.oauth2 import service_account
 import json
-
+from dotenv import load_dotenv
 from app.lib.prompt import create_prompt
 from app.lib.schema import get_response_schema
+
+load_dotenv()
+
+credentials_info = json.loads(os.getenv("GOOGLE_CREDENTIALS_JSON"))
+
+credentials = service_account.Credentials.from_service_account_info(
+    credentials_info
+)
 
 client = genai.Client(
     vertexai=True,
     project="land-record-507214",
     location="global",
-    http_options=HttpOptions(api_version="v1")
+    http_options=HttpOptions(api_version="v1"),
+    credentials=credentials
 )
 
 def process_by_llm(text: str, img_path: str):

@@ -1,5 +1,10 @@
 fastapi
 uvicorn
 python-multipart
-opencv-python
+google-genai
+google-cloud-documentai
+google-auth
+opencv-python-headless
 numpy
+python-dotenv
+pydantic
