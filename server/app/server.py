@@ -39,12 +39,20 @@ async def upload_image(file: UploadFile = File(...)):
     if image is None:
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Failed to decode image. Please ensure the file is a valid uncorrupted image.")
 
-    processed_image_path = preprocess(image)
-    response = extract(processed_image_path)
-    extracted_data = process_by_llm(response, processed_image_path)
-    print(extracted_data)
+    try:
+        processed_image_path = preprocess(image)
+        response = extract(processed_image_path)
+        extracted_data = process_by_llm(response, processed_image_path)
+        print("Extracted Data:", extracted_data)
 
-    return {
-        "message": "Image uploaded and preprocessed successfully",
-        "fields": extracted_data
-    }
+        return {
+            "message": "Image uploaded and preprocessed successfully",
+            "fields": extracted_data
+        }
+    except Exception as e:
+        import traceback
+        traceback.print_exc()
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"Processing failed: {str(e)}"
+        )

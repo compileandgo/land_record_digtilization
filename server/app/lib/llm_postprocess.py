@@ -21,12 +21,18 @@ client = genai.Client(
     credentials=credentials
 )
 
-def process_by_llm(text: str, img_path: str):
+import mimetypes
+
+def process_by_llm(text, img_path: str):
     with open(img_path, "rb") as f:
         image_data = f.read()
 
+    mime_type, _ = mimetypes.guess_type(img_path)
+    if not mime_type:
+        mime_type = "image/png"
+
     chat = client.chats.create(
-        model="gemini-3.5-flash",
+        model="gemini-1.5-flash",
         config=GenerateContentConfig(
             response_mime_type="application/json",
             response_schema=get_response_schema()
@@ -34,8 +40,8 @@ def process_by_llm(text: str, img_path: str):
     )
 
     response = chat.send_message([
-        Part.from_bytes(data=image_data,mime_type="image/jpeg"),
-        create_prompt(text)
+        Part.from_bytes(data=image_data, mime_type=mime_type),
+        create_prompt(json.dumps(text, indent=2) if isinstance(text, (dict, list)) else str(text))
     ])
 
     return json.loads(response.text)
