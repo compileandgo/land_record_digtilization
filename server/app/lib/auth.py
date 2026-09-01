@@ -40,6 +40,8 @@ def get_credentials():
                 break
 
         if creds is None and isinstance(data, dict):
+            if "private_key" in data and isinstance(data["private_key"], str):
+                data["private_key"] = data["private_key"].replace("\\n", "\n")
             creds = service_account.Credentials.from_service_account_info(data)
 
     if creds is None:
