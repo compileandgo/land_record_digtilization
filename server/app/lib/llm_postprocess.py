@@ -7,6 +7,7 @@ import json
 from app.lib.auth import get_credentials
 from app.lib.prompt import create_prompt
 from app.lib.schema import get_response_schema
+from dotenv import load_dotenv
 
 load_dotenv()
 
